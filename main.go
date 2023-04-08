@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/joedursun/currency/models"
+	"github.com/joedursun/economy-sim/models"
 )
 
 const (
