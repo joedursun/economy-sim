@@ -1,7 +1,7 @@
 package models
 
 const (
-	maxTimeSteps = 500
+	maxTimeSteps = 1000
 )
 
 var (
@@ -11,11 +11,15 @@ var (
 // InflationaryNetwork struct representing the network of people
 type InflationaryNetwork struct {
 	StaticNetwork
+	inflationRate float64
 }
 
 // NewInflationaryNetwork creates a new network with gridSize x gridSize people
-func NewInflationaryNetwork(gridSize int) InflationaryNetwork {
-	return InflationaryNetwork{StaticNetwork: NewStaticNetwork(gridSize)}
+func NewInflationaryNetwork(gridSize int, inflationRate float64) InflationaryNetwork {
+	return InflationaryNetwork{
+		StaticNetwork: NewStaticNetwork(gridSize),
+		inflationRate: inflationRate,
+	}
 }
 
 // SimulateTransactions simulates transactions between people at each time step
@@ -41,7 +45,7 @@ func (n *InflationaryNetwork) SimulateTransactions() bool {
 				if i == j || i == n.gridSize-1-j {
 					person := n.people[i][j]
 					balance := person.GetBalance()
-					newBalance := balance * 1.1
+					newBalance := balance * n.inflationRate
 					person.SetBalance(newBalance)
 				}
 			}
