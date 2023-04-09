@@ -20,6 +20,13 @@ The simulation features two monetary regimes:
 1. Inflationary: A specific set of people have their balances increased by some % every 10 time steps.
 2. Static money supply: No additional money is introduced into the economy.
 
+Here's an example of it in action with an "inflationary" network that adds 10%
+to people's balance if they're located along the diagonals. You can see that
+over time these people tend to accumulate a much higher balance and essentially
+inflate away the others' savings. Surprise!
+
+![inflation](https://user-images.githubusercontent.com/1846807/230749657-079f47a3-9903-403d-9e24-ed20b72adf0e.gif)
+
 ## How it works
 
 Each network is made of "people" who start with a random balance and income (eventually including fixed,
@@ -68,10 +75,3 @@ func clearScreen() {
 	cmd.Run()
 }
 ```
-
-Here's an example of it in action with an "inflationary" network that adds 10%
-to people's balance if they're located along the diagonals. You can see that
-over time these people tend to accumulate a much higher balance and essentially
-inflate away the others' savings. Surprise!
-
-![inflation](https://user-images.githubusercontent.com/1846807/230749657-079f47a3-9903-403d-9e24-ed20b72adf0e.gif)
