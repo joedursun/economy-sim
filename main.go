@@ -15,7 +15,7 @@ const (
 
 func main() {
 	gridSize := 20
-	network := models.NewInflationaryNetwork(gridSize)
+	network := models.NewStaticNetwork(gridSize)
 
 	// Simulate transactions and print state for 10 time steps
 	for network.SimulateTransactions() {
