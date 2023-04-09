@@ -13,9 +13,10 @@ type ProbabilisticPerson struct {
 	spendProbability   float64
 	minimumSpendAmount float64
 	balancePercentage  float64
+	fee                float64
 }
 
-func NewProbabilisticPerson(id int, spendProbability, minimumSpendAmount, balancePercentage float64) *ProbabilisticPerson {
+func NewProbabilisticPerson(id int, spendProbability, minimumSpendAmount, balancePercentage, spendFee float64) *ProbabilisticPerson {
 	person := &ProbabilisticPerson{
 		SimplePerson:       SimplePerson{id: id},
 		spendProbability:   spendProbability,
@@ -61,6 +62,7 @@ func (p *ProbabilisticPerson) UpdateSpending(grid [][]Person) {
 
 		if p.GetID() != receiver.GetID() {
 			p.SendMoney(spendAmount, receiver)
+			p.balance -= p.fee
 		}
 	}
 }

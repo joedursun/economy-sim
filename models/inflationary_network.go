@@ -59,6 +59,13 @@ func (n *InflationaryNetwork) SimulateTransactions() bool {
 
 // balanceToBlockChar maps a balance value to a Unicode block character
 func balanceToBlockChar(normalizedBalance float64) string {
+	// Ensure normalizedBalance is within the [0, 1] range
+	if normalizedBalance < 0 {
+		normalizedBalance = 0
+	} else if normalizedBalance > 1 {
+		normalizedBalance = 1
+	}
+
 	// Map the normalized balance value to an index in the blockChars slice.
 	index := int(normalizedBalance * float64(len(blockChars)-1))
 

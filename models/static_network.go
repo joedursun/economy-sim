@@ -27,7 +27,7 @@ func NewStaticNetwork(gridSize int) StaticNetwork {
 			minimumSpendAmount := 20.0
 			balancePercentage := 0.1
 
-			person := NewProbabilisticPerson(id, spendProbability, minimumSpendAmount, balancePercentage)
+			person := NewProbabilisticPerson(id, spendProbability, minimumSpendAmount, balancePercentage, 0.0)
 			person.SetBalance(rand.Float64() * 1000)
 			person.SetIncome(rand.Float64() * 2000)
 			person.SetFixedExpenses(rand.Float64() * 500)
