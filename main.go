@@ -14,16 +14,16 @@ const (
 )
 
 func main() {
-	gridSize := 5
-	network := models.NewNetwork(gridSize)
+	gridSize := 20
+	network := models.NewInflationaryNetwork(gridSize)
 
 	// Simulate transactions and print state for 10 time steps
-	for t := 1; t <= 10; t++ {
+	for network.SimulateTransactions() {
 		clearScreen()
-		fmt.Printf("Time step %d:\n", t)
+		fmt.Printf("Time step %d:\n", network.TimeStep)
 		network.PrintState()
-		network.SimulateTransactions()
-		time.Sleep(time.Second)
+
+		time.Sleep(50 * time.Millisecond)
 	}
 }
 
