@@ -1,7 +1,7 @@
 package models
 
 const (
-	maxTimeSteps = 1000
+	maxTimeSteps = 500
 )
 
 var (

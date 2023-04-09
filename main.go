@@ -14,7 +14,7 @@ const (
 )
 
 func main() {
-	network := models.NewInflationaryNetwork(gridSize, 1.15)
+	network := models.NewInflationaryNetwork(gridSize, 1.10)
 
 	for network.SimulateTransactions() {
 		clearScreen()

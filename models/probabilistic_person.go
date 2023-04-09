@@ -2,6 +2,12 @@ package models
 
 import "math/rand"
 
+var directions = []struct{ x, y int }{
+	{-1, -1}, {-1, 0}, {-1, 1},
+	{0, -1}, {0, 1},
+	{1, -1}, {1, 0}, {1, 1},
+}
+
 type ProbabilisticPerson struct {
 	SimplePerson
 	spendProbability   float64
@@ -9,10 +15,14 @@ type ProbabilisticPerson struct {
 	balancePercentage  float64
 }
 
-var directions = []struct{ x, y int }{
-	{-1, -1}, {-1, 0}, {-1, 1},
-	{0, -1}, {0, 1},
-	{1, -1}, {1, 0}, {1, 1},
+func NewProbabilisticPerson(id int, spendProbability, minimumSpendAmount, balancePercentage float64) *ProbabilisticPerson {
+	person := &ProbabilisticPerson{
+		SimplePerson:       SimplePerson{id: id},
+		spendProbability:   spendProbability,
+		minimumSpendAmount: minimumSpendAmount,
+		balancePercentage:  balancePercentage,
+	}
+	return person
 }
 
 func (p *ProbabilisticPerson) UpdateSpending(grid [][]Person) {
@@ -53,14 +63,4 @@ func (p *ProbabilisticPerson) UpdateSpending(grid [][]Person) {
 			p.SendMoney(spendAmount, receiver)
 		}
 	}
-}
-
-func NewProbabilisticPerson(id int, spendProbability, minimumSpendAmount, balancePercentage float64) *ProbabilisticPerson {
-	person := &ProbabilisticPerson{
-		SimplePerson:       SimplePerson{id: id},
-		spendProbability:   spendProbability,
-		minimumSpendAmount: minimumSpendAmount,
-		balancePercentage:  balancePercentage,
-	}
-	return person
 }
