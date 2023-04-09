@@ -10,14 +10,12 @@ import (
 )
 
 const (
-	numActors = 10
+	gridSize = 20
 )
 
 func main() {
-	gridSize := 20
 	network := models.NewInflationaryNetwork(gridSize, 1.15)
 
-	// Simulate transactions and print state for 10 time steps
 	for network.SimulateTransactions() {
 		clearScreen()
 		fmt.Printf("Time step %d:\n", network.TimeStep)
