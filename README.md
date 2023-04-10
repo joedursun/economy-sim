@@ -25,6 +25,11 @@ to people's balance if they're located along the diagonals. You can see that
 over time these people tend to accumulate a much higher balance and essentially
 inflate away the others' savings. Surprise!
 
+![before-histogram](https://user-images.githubusercontent.com/1846807/230923067-c958375d-3c78-4885-95bd-274d9b3f1cdd.png)
+![after-histogram](https://user-images.githubusercontent.com/1846807/230923043-d03d86c7-46a2-45d8-8ccb-58f80df51ad8.png)
+
+
+
 ![inflation](https://user-images.githubusercontent.com/1846807/230749657-079f47a3-9903-403d-9e24-ed20b72adf0e.gif)
 
 ## How it works
