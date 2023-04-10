@@ -24,8 +24,9 @@ func main() {
 	network := models.NewInflationaryNetwork(options) // e.g. Fiat
 
 	fmt.Printf("Money in circulation %.2f:\n", network.MoneyInCirculation())
-	network.PrintBalanceHistogram(network.People(), 100)
+	network.SaveHistogram(100, "before-histogram.png")
 	for network.SimulateTransactions() {
+		// Uncomment these lines to see the simulation in action
 		// clearScreen()
 		// fmt.Printf("Time step %d | Money in circulation %.2f:\n", network.TimeStep, network.MoneyInCirculation())
 		// network.PrintState()
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	fmt.Println("-----------------------------------")
-	network.PrintBalanceHistogram(network.People(), 100)
+	network.SaveHistogram(100, "after-histogram.png")
 	fmt.Printf("Money in circulation %.2f:\n", network.MoneyInCirculation())
 }
 
