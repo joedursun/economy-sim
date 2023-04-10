@@ -4,26 +4,31 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"time"
 
 	"github.com/joedursun/economy-sim/models"
 )
 
 const (
-	gridSize = 20
+	gridSize          = 20
+	numCentralBankers = 5
+	ethFee            = 10.00
 )
 
 func main() {
-	network := models.NewEthNetwork(gridSize, 10.00)
-	// network := models.NewInflationaryNetwork(gridSize, 1.10)
+	network := models.NewEthNetwork(gridSize, ethFee)
+	// network := models.NewInflationaryNetwork(gridSize, numCentralBankers, 1.10)
 
+	network.PrintBalanceHistogram(network.People(), 100)
 	for network.SimulateTransactions() {
-		clearScreen()
-		fmt.Printf("Time step %d:\n", network.TimeStep)
-		network.PrintState()
+		// clearScreen()
+		// fmt.Printf("Time step %d | Money in circulation %.2f:\n", network.TimeStep, network.MoneyInCirculation())
+		// network.PrintState()
 
-		time.Sleep(50 * time.Millisecond)
+		// time.Sleep(50 * time.Millisecond)
 	}
+
+	fmt.Println("-----------------------------------")
+	network.PrintBalanceHistogram(network.People(), 100)
 }
 
 // clearScreen clears the terminal screen

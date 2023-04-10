@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -19,25 +21,19 @@ func NewStaticNetwork(gridSize int) StaticNetwork {
 	network := StaticNetwork{gridSize: gridSize}
 	rand.Seed(time.Now().UnixNano())
 
-	for i := 0; i < gridSize; i++ {
-		row := make([]Person, gridSize)
-		for j := 0; j < gridSize; j++ {
-			id := i*gridSize + j + 1
-			spendProbability := 0.5
-			minimumSpendAmount := 20.0
-			balancePercentage := 0.1
-
-			person := NewProbabilisticPerson(id, spendProbability, minimumSpendAmount, balancePercentage, 0.0)
-			person.SetBalance(rand.Float64() * 1000)
-			person.SetIncome(rand.Float64() * 2000)
-			person.SetFixedExpenses(rand.Float64() * 500)
-			person.SetVariableExpenses(rand.Float64() * 300)
-			row[j] = person
-		}
-		network.people = append(network.people, row)
-	}
+	network.people = NewNormalPopulation(gridSize, 0)
 
 	return network
+}
+
+func (n *StaticNetwork) MoneyInCirculation() float64 {
+	total := 0.0
+	for i := 0; i < len(n.people); i++ {
+		for j := 0; j < len(n.people[i]); j++ {
+			total += n.people[i][j].GetBalance()
+		}
+	}
+	return total
 }
 
 // SimulateTransactions simulates transactions between people at each time step
@@ -102,4 +98,53 @@ func (n *StaticNetwork) normalizeBalances() [][]float64 {
 	}
 
 	return normalized
+}
+
+func (n *StaticNetwork) People() [][]Person {
+	return n.people
+}
+
+func (n *StaticNetwork) PrintBalanceHistogram(people [][]Person, numBins int) {
+	balances := []float64{}
+
+	// Collect all balances
+	for i := 0; i < len(people); i++ {
+		for j := 0; j < len(people[i]); j++ {
+			balances = append(balances, people[i][j].GetBalance())
+		}
+	}
+
+	// Sort the balances
+	sort.Float64s(balances)
+
+	// Find the maximum balance
+	maxBalance := balances[len(balances)-1]
+
+	// Calculate bin width
+	binWidth := maxBalance / float64(numBins)
+
+	// Create bins and count balances in each bin
+	binCounts := make([]int, numBins)
+	for _, balance := range balances {
+		binIndex := int(math.Floor(balance / binWidth))
+		if binIndex >= numBins {
+			binIndex = numBins - 1
+		}
+		binCounts[binIndex]++
+	}
+
+	// Find the maximum count to scale the histogram
+	maxCount := 0
+	for _, count := range binCounts {
+		if count > maxCount {
+			maxCount = count
+		}
+	}
+
+	// Print the histogram
+	for binIndex, count := range binCounts {
+		barLength := int(math.Round(float64(count) / float64(maxCount) * 50))
+		bar := strings.Repeat("█", barLength)
+		fmt.Printf("%6.2f - %6.2f: %s\n", binWidth*float64(binIndex), binWidth*float64(binIndex+1), bar)
+	}
 }

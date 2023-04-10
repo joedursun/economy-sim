@@ -3,6 +3,7 @@ package models
 import (
 	"math"
 	"math/rand"
+	"time"
 )
 
 func geometricDistribution2DSlice(rows, cols int, p float64, maxBalance float64) [][]float64 {
@@ -18,7 +19,7 @@ func geometricDistribution2DSlice(rows, cols int, p float64, maxBalance float64)
 		slice[i] = row
 	}
 
-	return slice
+	return shuffle2DSlice(slice)
 }
 
 func shuffle2DSlice(slice [][]float64) [][]float64 {
@@ -55,19 +56,57 @@ func shuffle2DSlice(slice [][]float64) [][]float64 {
 	return shuffledSlice
 }
 
+func normalDistribution2DSlice(rows, cols int, mean, stddev float64) [][]float64 {
+	slice := make([][]float64, rows)
+
+	rand.Seed(time.Now().UnixNano())
+
+	for i := 0; i < rows; i++ {
+		row := make([]float64, cols)
+		for j := 0; j < cols; j++ {
+			row[j] = rand.NormFloat64()*stddev + mean
+		}
+		slice[i] = row
+	}
+
+	return slice
+}
+
+func NewNormalPopulation(gridSize int, spendFee float64) [][]Person {
+	people := make([][]Person, gridSize)
+	balances := normalDistribution2DSlice(gridSize, gridSize, 1000.0, 100.0)
+
+	for i := 0; i < gridSize; i++ {
+		row := make([]Person, gridSize)
+		for j := 0; j < gridSize; j++ {
+			startingBalance := balances[i][j]
+			income := startingBalance * 0.1
+			id := i*gridSize + j + 1
+			minSpend := 10.0
+			maxSpendPercentage := 0.5
+			spendProbability := 0.5
+			person := NewProbabilisticPerson(id, spendProbability, minSpend, maxSpendPercentage, spendFee)
+			person.SetBalance(startingBalance)
+			person.SetIncome(income)
+			row[j] = person
+		}
+		people[i] = row
+	}
+
+	return people
+}
+
 func NewGeometricPopulation(gridSize int, spendFee float64) [][]Person {
 	people := make([][]Person, gridSize)
 
 	p := 0.1 // Probability parameter for the geometric distribution
 	maxBalance := 1000.0
 	geometricBalances := geometricDistribution2DSlice(gridSize, gridSize, p, maxBalance)
-	// Shuffle the balances so that the people with the highest balances are not all in the same row or column
-	shuffledBalances := shuffle2DSlice(geometricBalances)
 
 	for i := 0; i < gridSize; i++ {
 		row := make([]Person, gridSize)
 		for j := 0; j < gridSize; j++ {
-			startingBalance := shuffledBalances[i][j]
+			startingBalance := geometricBalances[i][j]
 			income := startingBalance * 0.1
 			id := i*gridSize + j + 1
 			minSpend := 10.0
