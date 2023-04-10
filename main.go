@@ -15,9 +15,11 @@ const (
 )
 
 func main() {
-	network := models.NewEthNetwork(gridSize, ethFee)
-	// network := models.NewInflationaryNetwork(gridSize, numCentralBankers, 1.10)
+	network := models.NewStaticNetwork(gridSize) // e.g. BTC
+	// network := models.NewEthNetwork(gridSize, ethFee) // e.g. ETH
+	// network := models.NewInflationaryNetwork(gridSize, numCentralBankers, 1.10) // e.g. Fiat
 
+	fmt.Printf("Money in circulation %.2f:\n", network.MoneyInCirculation())
 	network.PrintBalanceHistogram(network.People(), 100)
 	for network.SimulateTransactions() {
 		// clearScreen()
@@ -29,6 +31,7 @@ func main() {
 
 	fmt.Println("-----------------------------------")
 	network.PrintBalanceHistogram(network.People(), 100)
+	fmt.Printf("Money in circulation %.2f:\n", network.MoneyInCirculation())
 }
 
 // clearScreen clears the terminal screen

@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	maxTimeSteps = 600
+	maxTimeSteps = 10000
 )
 
 var (
