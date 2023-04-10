@@ -11,13 +11,13 @@ type EthNetwork struct {
 }
 
 // NewEthNetwork creates a new network with gridSize x gridSize people
-func NewEthNetwork(gridSize int, spendFee float64) EthNetwork {
+func NewEthNetwork(opts SimulatorOptions) EthNetwork {
 	rand.Seed(time.Now().UnixNano())
 	network := EthNetwork{
-		StaticNetwork: StaticNetwork{gridSize: gridSize},
+		StaticNetwork: StaticNetwork{gridSize: opts.GridSize},
 	}
 
-	network.people = NewGeometricPopulation(gridSize, spendFee)
+	network.people = NewGeometricPopulation(opts.GridSize, opts.BurnFee)
 
 	return network
 }
@@ -28,8 +28,8 @@ func (n *EthNetwork) SimulateTransactions() bool {
 		return false
 	}
 
-	for i := 0; i < n.gridSize; i++ {
-		for j := 0; j < n.gridSize; j++ {
+	for i := 0; i < n.opts.GridSize; i++ {
+		for j := 0; j < n.opts.GridSize; j++ {
 			person := n.people[i][j]
 			if probPerson, ok := person.(*ProbabilisticPerson); ok {
 				probPerson.UpdateSpending(n.people)

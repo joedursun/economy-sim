@@ -18,32 +18,33 @@ var (
 type InflationaryNetwork struct {
 	StaticNetwork
 	inflationRate float64
-	boostedPeople []struct {
+	// centralBankers are people who are given extra money periodically
+	centralBankers []struct {
 		row int
 		col int
 	}
 }
 
 // NewInflationaryNetwork creates a new network with gridSize x gridSize people
-func NewInflationaryNetwork(gridSize, numCentralBankers int, inflationRate float64) InflationaryNetwork {
-	boostedPeople := make([]struct {
+func NewInflationaryNetwork(opts SimulatorOptions) InflationaryNetwork {
+	bankers := make([]struct {
 		row int
 		col int
-	}, numCentralBankers)
-	for i := 0; i < numCentralBankers; i++ {
-		boostedPeople[i] = struct {
+	}, opts.NumCentralBankers)
+	for i := 0; i < opts.NumCentralBankers; i++ {
+		bankers[i] = struct {
 			row int
 			col int
 		}{
-			row: rand.Intn(gridSize),
-			col: rand.Intn(gridSize),
+			row: rand.Intn(opts.GridSize),
+			col: rand.Intn(opts.GridSize),
 		}
 	}
 
 	return InflationaryNetwork{
-		StaticNetwork: NewStaticNetwork(gridSize),
-		inflationRate: inflationRate,
-		boostedPeople: boostedPeople,
+		StaticNetwork:  NewStaticNetwork(opts),
+		inflationRate:  opts.InflationRate,
+		centralBankers: bankers,
 	}
 }
 
@@ -53,8 +54,8 @@ func (n *InflationaryNetwork) SimulateTransactions() bool {
 		return false
 	}
 
-	for i := 0; i < n.gridSize; i++ {
-		for j := 0; j < n.gridSize; j++ {
+	for i := 0; i < n.opts.GridSize; i++ {
+		for j := 0; j < n.opts.GridSize; j++ {
 			person := n.people[i][j]
 			if probPerson, ok := person.(*ProbabilisticPerson); ok {
 				probPerson.UpdateSpending(n.people)
@@ -65,7 +66,7 @@ func (n *InflationaryNetwork) SimulateTransactions() bool {
 	// for people along the diagonal, increase their balance by 10%
 	// to simulate inflation.
 	if n.TimeStep%10 == 0 {
-		for _, p := range n.boostedPeople {
+		for _, p := range n.centralBankers {
 			person := n.people[p.row][p.col]
 			balance := person.GetBalance()
 			newBalance := balance * n.inflationRate

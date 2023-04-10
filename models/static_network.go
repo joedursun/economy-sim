@@ -11,17 +11,18 @@ import (
 
 // StaticNetwork struct representing the network of people
 type StaticNetwork struct {
+	opts     SimulatorOptions
 	gridSize int
 	people   [][]Person
 	TimeStep int
 }
 
 // NewStaticNetwork creates a new network with gridSize x gridSize people
-func NewStaticNetwork(gridSize int) StaticNetwork {
-	network := StaticNetwork{gridSize: gridSize}
+func NewStaticNetwork(opts SimulatorOptions) StaticNetwork {
+	network := StaticNetwork{opts: opts}
 	rand.Seed(time.Now().UnixNano())
 
-	network.people = NewNormalPopulation(gridSize, 0)
+	network.people = NewNormalPopulation(opts.GridSize, opts.BurnFee)
 
 	return network
 }
@@ -42,8 +43,8 @@ func (n *StaticNetwork) SimulateTransactions() bool {
 		return false
 	}
 
-	for i := 0; i < n.gridSize; i++ {
-		for j := 0; j < n.gridSize; j++ {
+	for i := 0; i < n.opts.GridSize; i++ {
+		for j := 0; j < n.opts.GridSize; j++ {
 			person := n.people[i][j]
 			if probPerson, ok := person.(*ProbabilisticPerson); ok {
 				probPerson.UpdateSpending(n.people)
@@ -74,8 +75,8 @@ func (n *StaticNetwork) normalizeBalances() [][]float64 {
 	minBalance := math.MaxFloat64
 	maxBalance := -math.MaxFloat64
 
-	for i := 0; i < n.gridSize; i++ {
-		for j := 0; j < n.gridSize; j++ {
+	for i := 0; i < n.opts.GridSize; i++ {
+		for j := 0; j < n.opts.GridSize; j++ {
 			balance := n.people[i][j].GetBalance()
 			if balance < minBalance {
 				minBalance = balance
@@ -86,10 +87,10 @@ func (n *StaticNetwork) normalizeBalances() [][]float64 {
 		}
 	}
 
-	normalized := make([][]float64, n.gridSize)
-	for i := 0; i < n.gridSize; i++ {
-		row := make([]float64, n.gridSize)
-		for j := 0; j < n.gridSize; j++ {
+	normalized := make([][]float64, n.opts.GridSize)
+	for i := 0; i < n.opts.GridSize; i++ {
+		row := make([]float64, n.opts.GridSize)
+		for j := 0; j < n.opts.GridSize; j++ {
 			balance := n.people[i][j].GetBalance()
 			normalizedValue := (balance - minBalance) / (maxBalance - minBalance)
 			row[j] = normalizedValue

@@ -8,16 +8,20 @@ import (
 	"github.com/joedursun/economy-sim/models"
 )
 
-const (
-	gridSize          = 20
-	numCentralBankers = 5
-	ethFee            = 10.00
-)
-
 func main() {
-	network := models.NewStaticNetwork(gridSize) // e.g. BTC
-	// network := models.NewEthNetwork(gridSize, ethFee) // e.g. ETH
-	// network := models.NewInflationaryNetwork(gridSize, numCentralBankers, 1.10) // e.g. Fiat
+	options := models.SimulatorOptions{
+		GridSize:           20,
+		NumCentralBankers:  5,
+		BurnFee:            10.00,
+		MinSpend:           10.0,
+		MaxSpendPercentage: 0.5,
+		SpendProbability:   0.5,
+		InflationRate:      1.10,
+	}
+
+	// network := models.NewStaticNetwork(options) // e.g. BTC
+	// network := models.NewEthNetwork(options) // e.g. ETH
+	network := models.NewInflationaryNetwork(options) // e.g. Fiat
 
 	fmt.Printf("Money in circulation %.2f:\n", network.MoneyInCirculation())
 	network.PrintBalanceHistogram(network.People(), 100)
